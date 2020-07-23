@@ -15,6 +15,12 @@ line_bot_api = LineBotApi('YOUR_CHANNEL_ACCESS_TOKEN')
 # Channel Secret
 handler = WebhookHandler('YOUR_CHANNEL_SECRET')
 
+# 增加的這段放在下面
+@app.route("/")
+def home():
+    return render_template("home.html")
+# 增加的這段放在上面
+
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
 def callback():
