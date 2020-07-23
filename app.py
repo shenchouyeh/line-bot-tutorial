@@ -16,6 +16,7 @@ line_bot_api = LineBotApi('YOUR_CHANNEL_ACCESS_TOKEN')
 handler = WebhookHandler('YOUR_CHANNEL_SECRET')
 
 # 增加的這段放在下面
+from flask import render_template
 @app.route("/")
 def home():
     return render_template("home.html")
