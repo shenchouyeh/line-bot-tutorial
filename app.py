@@ -27,26 +27,25 @@ def home():
 def callback():
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
+
     # get request body as text
     body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
+    print("Request body: " + body, "Signature: " + signature)
     # handle webhook body
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
-        abort(400)
+       abort(400)
+
     return 'OK'
 
-# 處理訊息
+
 @handler.add(MessageEvent, message=TextMessage)
-#def handle_message(event):
-#    message = TextSendMessage(text=event.message.text)
-#    line_bot_api.reply_message(event.reply_token, message)
-def echo(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text)
-    )    
+def handle_message(event):
+    msg = event.message.text
+    print(msg)
+    msg = msg.encode('utf-8')
+    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
     
 import os
 if __name__ == "__main__":
