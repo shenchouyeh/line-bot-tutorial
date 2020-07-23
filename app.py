@@ -17,7 +17,7 @@ handler = WebhookHandler('87458c5b703a5a307e39f989f0c06108')
 
 # 增加的這段放在下面
 from flask import render_template
-@app.route("/")
+@app.route("/", methods=['GET'])
 def home():
     return render_template("home.html")
 # 增加的這段放在上面
