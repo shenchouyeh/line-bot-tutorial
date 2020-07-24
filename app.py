@@ -1,5 +1,4 @@
 import os
-import apiai
 import json
 import requests
 import random
@@ -24,9 +23,7 @@ app = Flask(__name__)
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 SECRET = os.environ.get('SECRET')
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
-DIALOGFLOW_CLIENT_ACCESS_TOKEN = os.environ.get('DIALOGFLOW_CLIENT_ACCESS_TOKEN')
 
-ai = apiai.ApiAI(DIALOGFLOW_CLIENT_ACCESS_TOKEN)
 line_bot_api = LineBotApi(ACCESS_TOKEN)
 handler = WebhookHandler(SECRET)
 
@@ -72,16 +69,8 @@ def is_alphabet(uchar):
 def handle_text_message(event):                  # default
     msg = event.message.text # message from user
     uid = event.source.user_id # user id
-    # 1. 傳送使用者輸入到 dialogflow 上
-    ai_request = ai.text_request()
-    #ai_request.lang = "en"
-    ai_request.lang = is_alphabet(msg)
-    ai_request.session_id = uid
-    ai_request.query = msg
 
-    # 2. 獲得使用者的意圖
-    ai_response = json.loads(ai_request.getresponse().read())
-    user_intent = ai_response['result']['metadata']['intentName']
+    user_intent = "WhatToEatForLunch"
 
     # 3. 根據使用者的意圖做相對應的回答
     if user_intent == "WhatToEatForLunch": # 當使用者意圖為詢問午餐時
@@ -101,12 +90,6 @@ def handle_text_message(event):                  # default
         line_bot_api.reply_message(
             event.reply_token,
             buttons_template_message)
-
-    elif user_intent == "WhatToPlay": # 當使用者意圖為詢問遊戲時
-        msg = "Hello, it's not ready"
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=msg))
 
     else: # 聽不懂時的回答
         msg = "Sorry，I don't understand"
